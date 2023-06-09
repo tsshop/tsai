@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.IVipConfigMapper">
+
+    <resultMap type="IVipConfig" id="VipConfigResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="time"    column="time"    />
+        <result property="amt"    column="amt"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="originalAmt"    column="original_amt"    />
+        <result property="isUse"    column="is_use"    />
+    </resultMap>
+
+    <sql id="selectVipConfigVo">
+        select id, name, time, amt, create_time, update_time, original_amt, is_use from vip_config
+    </sql>
+
+    <select id="selectVipConfigList" parameterType="IVipConfig" resultMap="VipConfigResult">
+        <include refid="selectVipConfigVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="time != null "> and time = #{time}</if>
+            <if test="amt != null "> and amt = #{amt}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="originalAmt != null "> and original_amt = #{originalAmt}</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+        </where>
+    </select>
+
+    <select id="selectVipConfigById" parameterType="Long" resultMap="VipConfigResult">
+        <include refid="selectVipConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVipConfig" parameterType="IVipConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into vip_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="time != null">time,</if>
+            <if test="amt != null">amt,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="originalAmt != null">original_amt,</if>
+            <if test="isUse != null">is_use,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="time != null">#{time},</if>
+            <if test="amt != null">#{amt},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="originalAmt != null">#{originalAmt},</if>
+            <if test="isUse != null">#{isUse},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVipConfig" parameterType="IVipConfig">
+        update vip_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="amt != null">amt = #{amt},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="originalAmt != null">original_amt = #{originalAmt},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVipConfigById" parameterType="Long">
+        delete from vip_config where id = #{id}
+    </delete>
+
+    <delete id="deleteVipConfigByIds" parameterType="String">
+        delete from vip_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

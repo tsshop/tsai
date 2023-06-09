@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.ISessionLogMapper">
+
+    <resultMap type="ISessionLog" id="SessionLogResult">
+        <result property="id"    column="id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectSessionLogVo">
+        select id, template_id, status, create_time, update_time, user_id from session_log
+    </sql>
+
+    <select id="selectSessionLogList" parameterType="ISessionLog" resultMap="SessionLogResult">
+        <include refid="selectSessionLogVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="templateId != null  and templateId != ''"> and template_id = #{templateId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectSessionLogById" parameterType="Long" resultMap="SessionLogResult">
+        <include refid="selectSessionLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSessionLog" parameterType="ISessionLog" useGeneratedKeys="true" keyProperty="id">
+        insert into session_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">template_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">#{templateId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSessionLog" parameterType="ISessionLog">
+        update session_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateId != null">template_id = #{templateId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSessionLogById" parameterType="Long">
+        delete from session_log where id = #{id}
+    </delete>
+
+    <delete id="deleteSessionLogByIds" parameterType="String">
+        delete from session_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

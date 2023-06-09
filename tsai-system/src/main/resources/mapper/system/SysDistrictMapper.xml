@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.system.mapper.SysDistrictMapper">
+
+    <resultMap type="SysDistrict" id="SysDistrictResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="level"    column="level"    />
+        <result property="upid"    column="upid"    />
+        <result property="en"    column="en"    />
+    </resultMap>
+
+    <sql id="selectSysDistrictVo">
+        select id, name, level, upid, en from sys_district
+    </sql>
+
+    <select id="selectSysDistrictList" parameterType="SysDistrict" resultMap="SysDistrictResult">
+        <include refid="selectSysDistrictVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="upid != null "> and upid = #{upid}</if>
+            <if test="en != null  and en != ''"> and en = #{en}</if>
+        </where>
+    </select>
+
+    <select id="selectSysDistrictById" parameterType="Integer" resultMap="SysDistrictResult">
+        <include refid="selectSysDistrictVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysDistrict" parameterType="SysDistrict" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_district
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="level != null">level,</if>
+            <if test="upid != null">upid,</if>
+            <if test="en != null">en,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="level != null">#{level},</if>
+            <if test="upid != null">#{upid},</if>
+            <if test="en != null">#{en},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDistrict" parameterType="SysDistrict">
+        update sys_district
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="upid != null">upid = #{upid},</if>
+            <if test="en != null">en = #{en},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysDistrictById" parameterType="Integer">
+        delete from sys_district where id = #{id}
+    </delete>
+
+    <delete id="deleteSysDistrictByIds" parameterType="String">
+        delete from sys_district where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

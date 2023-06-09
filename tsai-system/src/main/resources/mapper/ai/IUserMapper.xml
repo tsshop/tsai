@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.IUserMapper">
+
+    <resultMap type="IUser" id="UserResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="gender"    column="gender"    />
+        <result property="phone"    column="phone"    />
+        <result property="password"    column="password"    />
+        <result property="visiblePassword"    column="visible_password"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="remark"    column="remark"    />
+        <result property="vipEndTime"    column="vip_end_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="openId"    column="open_id"    />
+        <result property="inviterId"    column="inviter_id"    />
+    </resultMap>
+
+    <sql id="selectUserVo">
+        select id, name, avatar_url, gender, phone, password, visible_password, deleted, remark, vip_end_time, create_time, update_time, open_id, inviter_id from user
+    </sql>
+
+    <select id="selectUserList" parameterType="IUser" resultMap="UserResult">
+        <include refid="selectUserVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="visiblePassword != null  and visiblePassword != ''"> and visible_password = #{visiblePassword}</if>
+            <if test="deleted != null "> and deleted = #{deleted}</if>
+            <if test="vipEndTime != null "> and vip_end_time = #{vipEndTime}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="inviterId != null "> and inviter_id = #{inviterId}</if>
+        </where>
+    </select>
+
+    <select id="selectUserById" parameterType="Long" resultMap="UserResult">
+        <include refid="selectUserVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUser" parameterType="IUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="avatarUrl != null and avatarUrl != ''">avatar_url,</if>
+            <if test="gender != null">gender,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="visiblePassword != null">visible_password,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="vipEndTime != null">vip_end_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="openId != null and openId != ''">open_id,</if>
+            <if test="inviterId != null">inviter_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="avatarUrl != null and avatarUrl != ''">#{avatarUrl},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="visiblePassword != null">#{visiblePassword},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="vipEndTime != null">#{vipEndTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="openId != null and openId != ''">#{openId},</if>
+            <if test="inviterId != null">#{inviterId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="IUser">
+        update user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="avatarUrl != null and avatarUrl != ''">avatar_url = #{avatarUrl},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="visiblePassword != null">visible_password = #{visiblePassword},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="vipEndTime != null">vip_end_time = #{vipEndTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="openId != null and openId != ''">open_id = #{openId},</if>
+            <if test="inviterId != null">inviter_id = #{inviterId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserById" parameterType="Long">
+        delete from user where id = #{id}
+    </delete>
+
+    <delete id="deleteUserByIds" parameterType="String">
+        delete from user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

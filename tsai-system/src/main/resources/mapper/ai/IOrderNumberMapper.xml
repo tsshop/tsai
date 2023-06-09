@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.IOrderNumberMapper">
+
+    <resultMap type="IOrderNumber" id="OrderNumberResult">
+        <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="userId"    column="user_id"    />
+        <result property="allNumber"    column="all_number"    />
+        <result property="residueNumber"    column="residue_number"    />
+        <result property="totalAmt"    column="total_amt"    />
+        <result property="payAmt"    column="pay_amt"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="type"    column="type"    />
+        <result property="payNo"    column="pay_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="ip"    column="ip"    />
+        <result property="refundAmt"    column="refund_amt"    />
+        <result property="validEndTime"    column="valid_end_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="sourceUserId"    column="source_user_id"    />
+    </resultMap>
+
+    <sql id="selectOrderNumberVo">
+        select id, order_no, user_id, all_number, residue_number, total_amt, pay_amt, order_status, type, pay_no, remark, ip, refund_amt, valid_end_time, create_time, update_time, is_del, source_user_id from order_number
+    </sql>
+
+    <select id="selectOrderNumberList" parameterType="IOrderNumber" resultMap="OrderNumberResult">
+        <include refid="selectOrderNumberVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="allNumber != null  and allNumber != ''"> and all_number = #{allNumber}</if>
+            <if test="residueNumber != null  and residueNumber != ''"> and residue_number = #{residueNumber}</if>
+            <if test="totalAmt != null "> and total_amt = #{totalAmt}</if>
+            <if test="payAmt != null "> and pay_amt = #{payAmt}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="payNo != null  and payNo != ''"> and pay_no = #{payNo}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="refundAmt != null "> and refund_amt = #{refundAmt}</if>
+            <if test="validEndTime != null "> and valid_end_time = #{validEndTime}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="isDel != null "> and is_del = #{isDel}</if>
+            <if test="sourceUserId != null "> and source_user_id = #{sourceUserId}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderNumberById" parameterType="Long" resultMap="OrderNumberResult">
+        <include refid="selectOrderNumberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrderNumber" parameterType="IOrderNumber" useGeneratedKeys="true" keyProperty="id">
+        insert into order_number
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="allNumber != null">all_number,</if>
+            <if test="residueNumber != null">residue_number,</if>
+            <if test="totalAmt != null">total_amt,</if>
+            <if test="payAmt != null">pay_amt,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="type != null">type,</if>
+            <if test="payNo != null">pay_no,</if>
+            <if test="remark != null">remark,</if>
+            <if test="ip != null">ip,</if>
+            <if test="refundAmt != null">refund_amt,</if>
+            <if test="validEndTime != null">valid_end_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="sourceUserId != null">source_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="allNumber != null">#{allNumber},</if>
+            <if test="residueNumber != null">#{residueNumber},</if>
+            <if test="totalAmt != null">#{totalAmt},</if>
+            <if test="payAmt != null">#{payAmt},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="type != null">#{type},</if>
+            <if test="payNo != null">#{payNo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="refundAmt != null">#{refundAmt},</if>
+            <if test="validEndTime != null">#{validEndTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="sourceUserId != null">#{sourceUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderNumber" parameterType="IOrderNumber">
+        update order_number
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="allNumber != null">all_number = #{allNumber},</if>
+            <if test="residueNumber != null">residue_number = #{residueNumber},</if>
+            <if test="totalAmt != null">total_amt = #{totalAmt},</if>
+            <if test="payAmt != null">pay_amt = #{payAmt},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="payNo != null">pay_no = #{payNo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="refundAmt != null">refund_amt = #{refundAmt},</if>
+            <if test="validEndTime != null">valid_end_time = #{validEndTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="sourceUserId != null">source_user_id = #{sourceUserId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderNumberById" parameterType="Long">
+        delete from order_number where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderNumberByIds" parameterType="String">
+        delete from order_number where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

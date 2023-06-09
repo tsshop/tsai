@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.ITemplateTypeMapper">
+
+    <resultMap type="ITemplateType" id="TemplateTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="isUse"    column="is_use"    />
+        <result property="orderBy"    column="order_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTemplateTypeVo">
+        select id, name, is_use, order_by, create_time, update_time from template_type
+    </sql>
+
+    <select id="selectTemplateTypeList" parameterType="ITemplateType" resultMap="TemplateTypeResult">
+        <include refid="selectTemplateTypeVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="orderBy != null "> and order_by = #{orderBy}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectTemplateTypeById" parameterType="Long" resultMap="TemplateTypeResult">
+        <include refid="selectTemplateTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTemplateType" parameterType="ITemplateType" useGeneratedKeys="true" keyProperty="id">
+        insert into template_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="isUse != null">is_use,</if>
+            <if test="orderBy != null">order_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="isUse != null">#{isUse},</if>
+            <if test="orderBy != null">#{orderBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTemplateType" parameterType="ITemplateType">
+        update template_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+            <if test="orderBy != null">order_by = #{orderBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTemplateTypeById" parameterType="Long">
+        delete from template_type where id = #{id}
+    </delete>
+
+    <delete id="deleteTemplateTypeByIds" parameterType="String">
+        delete from template_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

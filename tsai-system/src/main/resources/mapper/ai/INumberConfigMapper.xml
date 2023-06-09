@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.INumberConfigMapper">
+
+    <resultMap type="INumberConfig" id="NumberConfigResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="number"    column="number"    />
+        <result property="amt"    column="amt"    />
+        <result property="time"    column="time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="originalAmt"    column="original_amt"    />
+        <result property="isUse"    column="is_use"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectNumberConfigVo">
+        select id, name, number, amt, time, create_time, update_time, original_amt, is_use, type from number_config
+    </sql>
+
+    <select id="selectNumberConfigList" parameterType="INumberConfig" resultMap="NumberConfigResult">
+        <include refid="selectNumberConfigVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="number != null "> and number = #{number}</if>
+            <if test="amt != null "> and amt = #{amt}</if>
+            <if test="time != null "> and time = #{time}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="originalAmt != null "> and original_amt = #{originalAmt}</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectNumberConfigById" parameterType="Long" resultMap="NumberConfigResult">
+        <include refid="selectNumberConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNumberConfig" parameterType="INumberConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into number_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="number != null">number,</if>
+            <if test="amt != null">amt,</if>
+            <if test="time != null">time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="originalAmt != null">original_amt,</if>
+            <if test="isUse != null">is_use,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="number != null">#{number},</if>
+            <if test="amt != null">#{amt},</if>
+            <if test="time != null">#{time},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="originalAmt != null">#{originalAmt},</if>
+            <if test="isUse != null">#{isUse},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNumberConfig" parameterType="INumberConfig">
+        update number_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="amt != null">amt = #{amt},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="originalAmt != null">original_amt = #{originalAmt},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNumberConfigById" parameterType="Long">
+        delete from number_config where id = #{id}
+    </delete>
+
+    <delete id="deleteNumberConfigByIds" parameterType="String">
+        delete from number_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

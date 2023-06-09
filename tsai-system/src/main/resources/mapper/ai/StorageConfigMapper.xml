@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.StorageConfigMapper">
+    
+    <resultMap type="StorageConfig" id="StorageConfigResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="isUse"    column="is_use"    />
+        <result property="remark"    column="remark"    />
+        <result property="config"    column="config"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStorageConfigVo">
+        select id, name, type, is_use, remark, config, create_time, update_time from storage_config
+    </sql>
+
+    <select id="selectStorageConfigList" parameterType="StorageConfig" resultMap="StorageConfigResult">
+        <include refid="selectStorageConfigVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="config != null  and config != ''"> and config = #{config}</if>
+        </where>
+    </select>
+    
+    <select id="selectStorageConfigById" parameterType="Long" resultMap="StorageConfigResult">
+        <include refid="selectStorageConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorageConfig" parameterType="StorageConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into storage_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="type != null">type,</if>
+            <if test="isUse != null">is_use,</if>
+            <if test="remark != null">remark,</if>
+            <if test="config != null">config,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="isUse != null">#{isUse},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="config != null">#{config},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorageConfig" parameterType="StorageConfig">
+        update storage_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="config != null">config = #{config},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageConfigById" parameterType="Long">
+        delete from storage_config where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageConfigByIds" parameterType="String">
+        delete from storage_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

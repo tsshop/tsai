@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.ISessionMsgMapper">
+
+    <resultMap type="ISessionMsg" id="SessionMsgResult">
+        <result property="id"    column="id"    />
+        <result property="logId"    column="log_id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="isFromUser"    column="is_from_user"    />
+        <result property="content"    column="content"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectSessionMsgVo">
+        select id, log_id, template_id, is_from_user, content, send_time, update_time, score from session_msg
+    </sql>
+
+    <select id="selectSessionMsgList" parameterType="ISessionMsg" resultMap="SessionMsgResult">
+        <include refid="selectSessionMsgVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="logId != null "> and log_id = #{logId}</if>
+            <if test="templateId != null "> and template_id = #{templateId}</if>
+            <if test="isFromUser != null "> and is_from_user = #{isFromUser}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="params.beginSendTime != null and params.beginSendTime != '' and params.endSendTime != null and params.endSendTime != ''"> and send_time between #{params.beginSendTime} and #{params.endSendTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="score != null "> and score = #{score}</if>
+        </where>
+    </select>
+
+    <select id="selectSessionMsgById" parameterType="Long" resultMap="SessionMsgResult">
+        <include refid="selectSessionMsgVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSessionMsg" parameterType="ISessionMsg" useGeneratedKeys="true" keyProperty="id">
+        insert into session_msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logId != null">log_id,</if>
+            <if test="templateId != null">template_id,</if>
+            <if test="isFromUser != null">is_from_user,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="sendTime != null">send_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="score != null">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logId != null">#{logId},</if>
+            <if test="templateId != null">#{templateId},</if>
+            <if test="isFromUser != null">#{isFromUser},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="score != null">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSessionMsg" parameterType="ISessionMsg">
+        update session_msg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logId != null">log_id = #{logId},</if>
+            <if test="templateId != null">template_id = #{templateId},</if>
+            <if test="isFromUser != null">is_from_user = #{isFromUser},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="score != null">score = #{score},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSessionMsgById" parameterType="Long">
+        delete from session_msg where id = #{id}
+    </delete>
+
+    <delete id="deleteSessionMsgByIds" parameterType="String">
+        delete from session_msg where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

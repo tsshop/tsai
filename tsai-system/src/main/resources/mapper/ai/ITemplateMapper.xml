@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.ITemplateMapper">
+
+    <resultMap type="ITemplate" id="TemplateResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="blurb"    column="blurb"    />
+        <result property="illustrate"    column="illustrate"    />
+        <result property="example"    column="example"    />
+        <result property="isUse"    column="is_use"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="score"    column="score"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="isIndex"    column="is_index"    />
+    </resultMap>
+
+    <sql id="selectTemplateVo">
+        select id, name, blurb, illustrate, example, is_use, content, create_time, update_time, score,type_id,is_index from template
+    </sql>
+
+    <select id="selectTemplateList" parameterType="ITemplate" resultMap="TemplateResult">
+        <include refid="selectTemplateVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="blurb != null  and blurb != ''"> and blurb = #{blurb}</if>
+            <if test="illustrate != null  and illustrate != ''"> and illustrate = #{illustrate}</if>
+            <if test="example != null  and example != ''"> and example = #{example}</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="typeId != null "> and type_id = #{typeId}</if>
+        </where>
+    </select>
+
+    <select id="selectTemplateById" parameterType="Long" resultMap="TemplateResult">
+        <include refid="selectTemplateVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTemplate" parameterType="ITemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="blurb != null and blurb != ''">blurb,</if>
+            <if test="illustrate != null and illustrate != ''">illustrate,</if>
+            <if test="example != null and example != ''">example,</if>
+            <if test="isUse != null">is_use,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="score != null">score,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="isIndex != null">is_index,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="blurb != null and blurb != ''">#{blurb},</if>
+            <if test="illustrate != null and illustrate != ''">#{illustrate},</if>
+            <if test="example != null and example != ''">#{example},</if>
+            <if test="isUse != null">#{isUse},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="score != null">#{score},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="isIndex != null">#{isIndex},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTemplate" parameterType="ITemplate">
+        update template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="blurb != null and blurb != ''">blurb = #{blurb},</if>
+            <if test="illustrate != null and illustrate != ''">illustrate = #{illustrate},</if>
+            <if test="example != null and example != ''">example = #{example},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="isIndex != null">is_index = #{isIndex},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTemplateById" parameterType="Long">
+        delete from template where id = #{id}
+    </delete>
+
+    <delete id="deleteTemplateByIds" parameterType="String">
+        delete from template where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

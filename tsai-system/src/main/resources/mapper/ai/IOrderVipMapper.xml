@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.ai.mapper.IOrderVipMapper">
+
+    <resultMap type="IOrderVip" id="OrderVipResult">
+        <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="userId"    column="user_id"    />
+        <result property="time"    column="time"    />
+        <result property="totalAmt"    column="total_amt"    />
+        <result property="payAmt"    column="pay_amt"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="payNo"    column="pay_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="ip"    column="ip"    />
+        <result property="refundAmt"    column="refund_amt"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDel"    column="is_del"    />
+    </resultMap>
+
+    <sql id="selectOrderVipVo">
+        select id, order_no, user_id, time, total_amt, pay_amt, order_status, pay_no, remark, ip, refund_amt, create_time, update_time, is_del from order_vip
+    </sql>
+
+    <select id="selectOrderVipList" parameterType="IOrderVip" resultMap="OrderVipResult">
+        <include refid="selectOrderVipVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="time != null "> and time = #{time}</if>
+            <if test="totalAmt != null "> and total_amt = #{totalAmt}</if>
+            <if test="payAmt != null "> and pay_amt = #{payAmt}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="payNo != null  and payNo != ''"> and pay_no = #{payNo}</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="refundAmt != null "> and refund_amt = #{refundAmt}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="isDel != null "> and is_del = #{isDel}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderVipById" parameterType="Long" resultMap="OrderVipResult">
+        <include refid="selectOrderVipVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrderVip" parameterType="IOrderVip" useGeneratedKeys="true" keyProperty="id">
+        insert into order_vip
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null and orderNo != ''">order_no,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="time != null">time,</if>
+            <if test="totalAmt != null">total_amt,</if>
+            <if test="payAmt != null">pay_amt,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="payNo != null and payNo != ''">pay_no,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="ip != null">ip,</if>
+            <if test="refundAmt != null">refund_amt,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDel != null">is_del,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="totalAmt != null">#{totalAmt},</if>
+            <if test="payAmt != null">#{payAmt},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="payNo != null and payNo != ''">#{payNo},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="refundAmt != null">#{refundAmt},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDel != null">#{isDel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderVip" parameterType="IOrderVip">
+        update order_vip
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="totalAmt != null">total_amt = #{totalAmt},</if>
+            <if test="payAmt != null">pay_amt = #{payAmt},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="payNo != null and payNo != ''">pay_no = #{payNo},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="refundAmt != null">refund_amt = #{refundAmt},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderVipById" parameterType="Long">
+        delete from order_vip where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderVipByIds" parameterType="String">
+        delete from order_vip where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
